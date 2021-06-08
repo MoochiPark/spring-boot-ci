@@ -1,7 +1,13 @@
 stages:
   - build
+  - test
 
 gradle-build:
   stage: build
   image: openjdk:11-jdk-slim
-  script: ./gradlew build -x test
+  script: ./gradlew build
+
+gradle-test:
+  stage: test
+  image: openjdk:11-jdk-slim
+  script: ./gradlew test

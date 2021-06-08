@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.wisoft"
-version = "0.0.1-SNAPSHOT"
+version = "2021.23.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
