@@ -15,15 +15,25 @@ cache:
 gradle-build:
   stage: build
   script: ./gradlew build
+  artifacts:
+    paths:
+      - build/libs/*2021.22.0.jar
+
 
 gradle-test1:
   stage: test
-  needs: ["gradle-build"]
-#  image: openjdk:11-jdk-slim
+  needs:
+    - job: gradle-build
+      artifacts: false
   script: ./gradlew test
+  artifacts:
+    when: always
+    reports:
+      junit: build/test-results/test/**/TEST-*.xml
 
 gradle-test2:
   stage: test
-  needs: ["gradle-build"]
-#  image: openjdk:11-jdk-slim
+  needs:
+    - job: gradle-build
+      artifacts: false
   script: ./gradlew check
