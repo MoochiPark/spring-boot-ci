@@ -9,5 +9,6 @@ gradle-build:
 
 gradle-test:
   stage: test
+  needs: ["gradle-build"]
   image: openjdk:11-jdk-slim
   script: ./gradlew test
