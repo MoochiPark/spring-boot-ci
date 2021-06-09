@@ -17,7 +17,7 @@ gradle-build:
   script: ./gradlew build
   artifacts:
     paths:
-      - build/libs/*2021.23.0.jar
+      - build/libs/*.jar
 
 
 gradle-test1:
