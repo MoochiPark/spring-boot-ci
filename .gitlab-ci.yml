@@ -2,17 +2,18 @@ stages:
   - build
   - test
 
-#before_script:
-#  - export GRADLE_USER_HOME=`pwd`/.gradle
-#
-#cache:
-#  paths:
-#    - .gradle/wrapper
-#    - .gradle/caches
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+image: openjdk:11-jdk-slim
+
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
 
 gradle-build:
   stage: build
-  image: openjdk:11-jdk-slim
   script: ./gradlew build
 
 gradle-test1:
