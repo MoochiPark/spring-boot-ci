@@ -14,14 +14,26 @@ cache:
 
 gradle-build:
   stage: build
-  script: ./gradlew build -x test
+  script: ./gradlew build
+  artifacts:
+    paths:
+      - build/libs/*.jar
+
 
 gradle-test1:
   stage: test
-  needs: ["gradle-build"]
+  needs:
+    - job: gradle-build
+      artifacts: false
   script: ./gradlew test
+  artifacts:
+    when: always
+    reports:
+      junit: build/test-results/test/**/TEST-*.xml
 
 gradle-test2:
   stage: test
-  needs: ["gradle-build"]
+  needs:
+    - job: gradle-build
+      artifacts: false
   script: ./gradlew check
