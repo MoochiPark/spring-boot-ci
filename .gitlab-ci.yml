@@ -19,11 +19,11 @@ gradle-build:
 gradle-test1:
   stage: test
   needs: ["gradle-build"]
-  image: openjdk:11-jdk-slim
+#  image: openjdk:11-jdk-slim
   script: ./gradlew test
 
 gradle-test2:
   stage: test
   needs: ["gradle-build"]
-  image: openjdk:11-jdk-slim
+#  image: openjdk:11-jdk-slim
   script: ./gradlew check
