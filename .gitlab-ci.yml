@@ -3,11 +3,10 @@ stages:
   - test
   - publish
 
-#variables:
-#  REPOSITORY_NAME: spring-boot-coroutines-exposed
-#  # Instruct Docker host to daemon of DinD.
-#  DOCKER_HOST: "tcp://docker:2375"
-#  DOCKER_TLS_CERTDIR: ""
+variables:
+  #  # Instruct Docker host to daemon of DinD.
+  DOCKER_HOST: "tcp://docker:2375"
+  DOCKER_TLS_CERTDIR: ""
 
 
 before_script:
@@ -41,14 +40,17 @@ gradle-test:
 
 docker-build:
   stage: publish
+  needs:
+    - job: gradle-build
   image: docker:stable
   services:
     - docker:dind
   before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker login $HARBOR_URL -u $HARBOR_ID -p $HARBOR_PASSWORD_TOKEN
   script:
-    - docker pull $CI_REGISTRY_IMAGE:latest || true
-    - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --tag $CI_REGISTRY_IMAGE:latest .
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-    - docker push $CI_REGISTRY_IMAGE:latest
-
+    - docker pull $HARBOR_URL/$HARBOR_PROJECT/$CI_PROJECT_NAME:latest || true
+    - docker build --cache-from $HARBOR_URL/$HARBOR_PROJECT/$CI_PROJECT_NAME:latest
+      -t $HARBOR_URL/$HARBOR_PROJECT/$CI_PROJECT_NAME:CI_COMMIT_SHA
+      -t $HARBOR_URL/$HARBOR_PROJECT/$CI_PROJECT_NAME:latest .
+    - docker push $HARBOR_URL/$HARBOR_PROJECT/$CI_PROJECT_NAME:$CI_COMMIT_SHA
+    - docker push $HARBOR_URL/$HARBOR_PROJECT/$CI_PROJECT_NAME:latest
