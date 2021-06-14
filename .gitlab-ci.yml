@@ -21,7 +21,7 @@ cache:
 
 gradle-build:
   stage: build
-  script: ./gradlew build
+  script: ./gradlew build -x test
   artifacts:
     paths:
       - build/libs/*.jar
@@ -50,7 +50,5 @@ docker-build:
   script:
     - docker pull $HARBOR_URL/$HARBOR_PROJECT/$CI_PROJECT_NAME:latest || true
     - docker build --cache-from $HARBOR_URL/$HARBOR_PROJECT/$CI_PROJECT_NAME:latest
-      -t $HARBOR_URL/$HARBOR_PROJECT/$CI_PROJECT_NAME:CI_COMMIT_SHA
       -t $HARBOR_URL/$HARBOR_PROJECT/$CI_PROJECT_NAME:latest .
-    - docker push $HARBOR_URL/$HARBOR_PROJECT/$CI_PROJECT_NAME:$CI_COMMIT_SHA
     - docker push $HARBOR_URL/$HARBOR_PROJECT/$CI_PROJECT_NAME:latest
