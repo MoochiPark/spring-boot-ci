@@ -1,0 +1,14 @@
+### 추가
+POST http://localhost:8080/greetings
+Content-Type: application/json
+
+{
+  "id": 2,
+  "content": "Hello, Sangmin!"
+}
+
+### id로 조회
+GET http://localhost:8080/greetings/1
+
+### 전체 조회
+GET http://localhost:8080/greetings
