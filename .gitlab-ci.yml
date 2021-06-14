@@ -1,6 +1,14 @@
 stages:
   - build
   - test
+  - publish
+
+#variables:
+#  REPOSITORY_NAME: spring-boot-coroutines-exposed
+#  # Instruct Docker host to daemon of DinD.
+#  DOCKER_HOST: "tcp://docker:2375"
+#  DOCKER_TLS_CERTDIR: ""
+
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
@@ -20,7 +28,7 @@ gradle-build:
       - build/libs/*.jar
 
 
-gradle-test1:
+gradle-test:
   stage: test
   needs:
     - job: gradle-build
@@ -31,9 +39,16 @@ gradle-test1:
     reports:
       junit: build/test-results/test/**/TEST-*.xml
 
-gradle-test2:
-  stage: test
-  needs:
-    - job: gradle-build
-      artifacts: false
-  script: ./gradlew check
+docker-build:
+  stage: publish
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --tag $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:latest
+
