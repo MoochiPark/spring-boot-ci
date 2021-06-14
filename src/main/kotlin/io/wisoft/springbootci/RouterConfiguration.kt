@@ -12,5 +12,10 @@ class RouterConfiguration {
             "greeting".nest {
                 GET("", greetingHandler::greeting)
             }
+            "greetings".nest {
+                GET("", greetingHandler::getAll)
+                GET("{id}", greetingHandler::getById)
+                POST("", greetingHandler::create)
+            }
         }
 }
