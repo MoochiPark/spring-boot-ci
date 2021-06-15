@@ -4,7 +4,7 @@ stages:
   - publish
 
 variables:
-  #  # Instruct Docker host to daemon of DinD.
+  # Instruct Docker host to daemon of DinD.
   DOCKER_HOST: "tcp://docker:2375"
   DOCKER_TLS_CERTDIR: ""
 
@@ -41,6 +41,8 @@ gradle-test:
 docker-build:
   stage: publish
   needs:
+    - job: gradle-test
+      artifacts: false
     - job: gradle-build
   image: docker:stable
   services:
